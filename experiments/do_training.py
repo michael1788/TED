@@ -19,7 +19,6 @@ from python import fixed_parameters as FP
 
 parser = argparse.ArgumentParser(description='Run CLM training')
 parser.add_argument('-c','--configfile', type=str, help='path to config file', required=True)
-parser.add_argument('-f','--name_data', type=str, help='Name of the ft file', required=True)
 parser.add_argument('-r','--repeat', type=int, help='Number of repeats', required=True)
 
 class SeqModel():
@@ -76,7 +75,6 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read(configfile)
     repeat = args['repeat']
-    name_data = args['name_data']
     
     # get back the experiment parameters
     min_len = int(config['PROCESSING']['min_len'])
@@ -94,9 +92,9 @@ if __name__ == '__main__':
     dir_exp = str(config['EXPERIMENTS']['dir'])
     exp_name = configfile.split('/')[-1].replace('.ini','')
     if repeat>0:
-        save_path = f'{dir_exp}/{mode}/{exp_name}/{name_data}/models/{repeat}/'
+        save_path = f'{dir_exp}/{mode}/{exp_name}/models/{repeat}/'
     else:
-        save_path = f'{dir_exp}/{mode}/{exp_name}/{name_data}/models/'
+        save_path = f'{dir_exp}/{mode}/{exp_name}/models/'
     os.makedirs(save_path, exist_ok=True)
     ####################################
     
@@ -147,13 +145,9 @@ if __name__ == '__main__':
     # Path to the data
     aug = int(config['AUGMENTATION']['fold'])
     dir_data = str(config['DATA']['dir'])
+    name = str(config['DATA']['name'])
+    dir_split_data = f'{dir_data}{name}/{min_len}_{max_len}_x{aug}/'
     
-    if config.getboolean('PROCESSING', 'randomized_smi'):
-        print('\randomized data loaded')
-        name_data = f'{name_data}/{min_len}_{max_len}_x{aug}_randomized/'
-    else:
-        name_data = f'{name_data}/{min_len}_{max_len}_x{aug}/'
-    dir_split_data = f'{dir_data}{name_data}'
     if verbose: print(f'Data path : {dir_split_data}')
     
     # load partitions
@@ -165,10 +159,7 @@ if __name__ == '__main__':
     partition['val'] = hp.load_obj(path_partition_valid)
         
     # get back the name of the training data from parameters
-    if config.getboolean('PROCESSING', 'randomized_smi'):
-        path_data = f'{dir_split_data}{min_len}_{max_len}_x{aug}_randomized.txt'
-    else:
-        path_data = f'{dir_split_data}{min_len}_{max_len}_x{aug}.txt'
+    path_data = f'{dir_split_data}{min_len}_{max_len}_x{aug}.txt'
     
     # finally, we infer the vocab size from the len
     # of the tokenization used

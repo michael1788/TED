@@ -21,7 +21,7 @@ declare -a arrsize=("_5" "_10" "_20" "_40")
 for f in "${arrcid[@]}";
     do for s in "${arrsize[@]}";
         do for m in $(seq $RANGESTART $STEP $RANGEEND);
-            do python do_process_multinomial_generated.py --configfile $CONFIG_FILE --repeat 0 --name_data "$f$s" --epoch $m
+            do python do_process_generated.py --configfile $CONFIG_FILE --repeat 0 --name_data "$f$s" --epoch $m
         done
     done
 done

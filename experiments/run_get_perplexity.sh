@@ -16,7 +16,7 @@ declare -a arrsize=("_5" "_10" "_20" "_40")
 for f in "${arrcid[@]}";
     do for s in "${arrsize[@]}";
         do for m in $(seq $RANGESTART $STEP $RANGEEND);
-            do python get_perplexity_multinomial.py --configfile $CONFIG_FILE --repeat 0 --name_data "$f$s" --epoch $m --from_epoch --only_novo
+            do python get_perplexity.py --configfile $CONFIG_FILE --repeat 0 --name_data "$f$s" --epoch $m --from_epoch --only_novo
         done
     done
 done
